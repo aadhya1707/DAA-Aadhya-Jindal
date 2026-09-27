@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    newNode->data = data;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+// Detect cycle
+int detectCycle(struct Node* head) {
+    struct Node* slow = head;
+    struct Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+
+        slow = slow->next;          // 1 step
+        fast = fast->next->next;    // 2 steps
+
+        if (slow == fast) {
+            return 1;               // Cycle found
+        }
+    }
+
+    return 0;                       // No cycle
+}
+
+int main() {
+
+    struct Node* head = createNode(1);
+    head->next = createNode(2);
+    head->next->next = createNode(3);
+    head->next->next->next = createNode(4);
+
+    // Creating a cycle:
+    // 4 -> 2
+    head->next->next->next->next = head->next;
+
+    if (detectCycle(head))
+        printf("Cycle detected\n");
+    else
+        printf("No cycle\n");
+
+    return 0;
+}
